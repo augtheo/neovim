@@ -1,0 +1,277 @@
+inputs:
+{
+  config,
+  wlib,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  imports = [ wlib.wrapperModules.neovim ];
+
+  # --- 1. Library & Options ---
+
+  options.nvim-lib = {
+    neovimPlugins = lib.mkOption {
+      readOnly = true;
+      type = lib.types.attrsOf wlib.types.stringable;
+      # Makes plugins autobuilt from our inputs available with
+      # `config.nvim-lib.neovimPlugins.<name_without_prefix>`
+      default = config.nvim-lib.pluginsFromPrefix "plugins-" inputs;
+    };
+
+    # build plugins from inputs set
+    pluginsFromPrefix = lib.mkOption {
+      type = lib.types.raw;
+      readOnly = true;
+      default =
+        prefix: inputs:
+        lib.pipe inputs [
+          builtins.attrNames
+          (builtins.filter (s: lib.hasPrefix prefix s))
+          (map (
+            input:
+            let
+              name = lib.removePrefix prefix input;
+            in
+            {
+              inherit name;
+              value = config.nvim-lib.mkPlugin name inputs.${input};
+            }
+          ))
+          builtins.listToAttrs
+        ];
+    };
+  };
+
+  options.settings = {
+    colorscheme = lib.mkOption {
+      type = lib.types.str;
+      default = "catppuccin";
+    };
+
+    cats = lib.mkOption {
+      readOnly = true;
+      type = lib.types.attrsOf lib.types.bool;
+      default = builtins.mapAttrs (_: v: v.enable) config.specs;
+    };
+  };
+
+  config.settings.config_directory = ./.;
+
+  # To add a wrapped $out/bin/${config.binName}-neovide to the resulting neovim derivation
+  # config.hosts.neovide.nvim-host.enable = true;
+
+  config.settings.colorscheme = "moonfly";
+
+  config.specs.colorscheme = {
+    lazy = true;
+    data = builtins.getAttr config.settings.colorscheme (
+      with pkgs.vimPlugins;
+      {
+        "onedark_dark" = onedarkpro-nvim;
+        "onedark_vivid" = onedarkpro-nvim;
+        "onedark" = onedarkpro-nvim;
+        "onelight" = onedarkpro-nvim;
+        "moonfly" = vim-moonfly-colors;
+        "catppuccin" = catppuccin-nvim;
+      }
+    );
+  };
+
+  config.info.cats = builtins.mapAttrs (_: v: v.enable) config.specs;
+
+  # If the defaults are fine, you can just provide the `.data` field
+  # In this case, a list of specs, instead of a single plugin like above
+  config.specs.lze = [
+    # if defaults is fine, you can just provide the `.data` field
+    config.nvim-lib.neovimPlugins.lze
+    # but these can be specs too!
+    {
+      # these ones can't take lists though
+      data = config.nvim-lib.neovimPlugins.lzextras;
+      # things can target any spec that has a name.
+      name = "lzextras";
+      # now something else can be after = [ "lzextras" ]
+      # the spec name is not the plugin name.
+      # to override the plugin name, use `pname`
+      # You could run something before your main init.lua like this
+      # before = [ "INIT_MAIN" ];
+      # You can include configuration and translated nix values here as well!
+      # type = "lua"; # | "fnl" | "vim"
+      # info = { };
+      # config = ''
+      #   local info, pname, lazy = ...
+      # '';
+    }
+  ];
+
+  ## specifications
+
+  config.specs.nix = {
+    after = [ "general" ]; # Ensure it loads after core logic
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+      # specific nix plugins if any
+    ];
+    extraPackages = with pkgs; [
+      nixd # LSP
+      nixfmt # Formatter
+    ];
+  };
+
+  # You can use the before and after fields to run them before or after other specs or spec of lists of specs
+  config.specs.lua = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+      lazydev-nvim
+    ];
+    extraPackages = with pkgs; [
+      lua-language-server
+      stylua
+    ];
+  };
+
+  config.specs.rust = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+    ];
+    extraPackages = with pkgs; [
+      rust-analyzer
+    ];
+  };
+
+  config.specs.debug = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+      nvim-dap
+      nvim-dap-ui
+      nvim-dap-virtual-text
+    ];
+    extraPackages = with pkgs; [
+    ];
+  };
+
+  config.specs.git = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+      gitlinker-nvim
+      vim-fugitive
+      diffview-nvim
+      gitsigns-nvim
+    ];
+    extraPackages = with pkgs; [
+      lazygit
+    ];
+  };
+
+  config.specs.markdown = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+    ];
+    extraPackages = with pkgs; [
+    ];
+  };
+
+  config.specs.general = {
+    # this would ensure any config included from nix in here will be ran after any provided by the `lze` spec
+    # If we provided any from within either spec, anyway
+    after = [ "lze" ];
+    # note we didn't have to specify the `lze` specs name, because it was a top level spec
+    extraPackages = with pkgs; [
+      lazygit
+      tree-sitter
+    ];
+    # this `lazy = true` definition will transfer to specs in the contained DAL, if there is one.
+    # This is because the definition of lazy in `config.specMods` checks `parentSpec.lazy or false`
+    # the submodule type for `config.specMods` gets `parentSpec` as a `specialArg`.
+    # you can define options like this too!
+    lazy = true;
+    # here we chose a DAL of plugins, but we can also pass a single plugin, or null
+    # plugins are of type wlib.types.stringable
+    data = with pkgs.vimPlugins; [
+      snacks-nvim
+      nvim-lspconfig
+      nvim-surround
+      vim-startuptime
+      blink-cmp
+      blink-compat
+      cmp-cmdline
+      luasnip
+      colorful-menu-nvim
+      mini-files
+      alpha-nvim
+      nvim-web-devicons
+      lualine-nvim
+
+      mini-diff
+      mini-surround
+      mini-align
+      mini-bracketed
+      noice-nvim
+      which-key-nvim
+      persistence-nvim
+      todo-comments-nvim
+      trouble-nvim
+      colorful-winsep-nvim
+      nvim-lint
+      conform-nvim
+      nvim-treesitter-textobjects
+      # treesitter + grammars
+      nvim-treesitter.withAllGrammars
+      # This is for if you only want some of the grammars
+      # (nvim-treesitter.withPlugins (
+      #   plugins: with plugins; [
+      #     nix
+      #     lua
+      #   ]
+      # ))
+      telescope-fzf-native-nvim
+      telescope-ui-select-nvim
+      telescope-nvim
+    ];
+  };
+
+  # These are from the tips and tricks section of the neovim wrapper docs!
+  # https://birdeehub.github.io/nix-wrapper-modules/neovim.html#tips-and-tricks
+  # We could put these in another module and import them here instead!
+
+  # This submodule modifies both levels of your specs
+  config.specMods =
+    {
+      # When this module is ran in an inner list,
+      # this will contain `config` of the parent spec
+      parentSpec ? null,
+      # and this will contain `options`
+      # otherwise they will be `null`
+      parentOpts ? null,
+      parentName ? null,
+      # and then config from this one, as normal
+      config,
+      # and the other module arguments.
+      ...
+    }:
+    {
+      # you could use this to change defaults for the specs
+      # config.collateGrammars = lib.mkDefault (parentSpec.collateGrammars or false);
+      # config.autoconfig = lib.mkDefault (parentSpec.autoconfig or false);
+      # config.runtimeDeps = lib.mkDefault (parentSpec.runtimeDeps or false);
+      # config.pluginDeps = lib.mkDefault (parentSpec.pluginDeps or false);
+      # or something more interesting like:
+      # add an extraPackages field to the specs themselves
+      options.extraPackages = lib.mkOption {
+        type = lib.types.listOf wlib.types.stringable;
+        default = [ ];
+        description = "a extraPackages spec field to put packages to suffix to the PATH";
+      };
+      # You could do this too
+      # config.before = lib.mkDefault [ "INIT_MAIN" ];
+    };
+  config.extraPackages = config.specCollect (acc: v: acc ++ (v.extraPackages or [ ])) [ ];
+
+}
