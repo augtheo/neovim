@@ -133,13 +133,47 @@ inputs:
     ];
   };
 
+  config.specs.python = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+      neotest-python
+      nvim-dap-python
+    ];
+    extraPackages = with pkgs; [
+      pyright
+      ruff
+      uv
+    ];
+  };
+
   config.specs.rust = {
     after = [ "general" ];
     lazy = true;
     data = with pkgs.vimPlugins; [
+      rustaceanvim
     ];
     extraPackages = with pkgs; [
       rust-analyzer
+      cargo
+      lldb_20
+      rustc
+      clippy
+      rustfmt
+    ];
+  };
+
+  config.specs.go = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+      neotest-go
+    ];
+    extraPackages = with pkgs; [
+      gopls
+      gotools
+      go-tools
+      # gccgo
     ];
   };
 
@@ -150,6 +184,18 @@ inputs:
       nvim-dap
       nvim-dap-ui
       nvim-dap-virtual-text
+    ];
+    extraPackages = with pkgs; [
+    ];
+  };
+
+  config.specs.testing = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+      neotest
+      nvim-nio
+      FixCursorHold-nvim
     ];
     extraPackages = with pkgs; [
     ];
@@ -173,6 +219,8 @@ inputs:
     after = [ "general" ];
     lazy = true;
     data = with pkgs.vimPlugins; [
+      markdown-preview-nvim
+      render-markdown-nvim
     ];
     extraPackages = with pkgs; [
     ];
@@ -191,7 +239,7 @@ inputs:
     # This is because the definition of lazy in `config.specMods` checks `parentSpec.lazy or false`
     # the submodule type for `config.specMods` gets `parentSpec` as a `specialArg`.
     # you can define options like this too!
-    lazy = true;
+    lazy = false;
     # here we chose a DAL of plugins, but we can also pass a single plugin, or null
     # plugins are of type wlib.types.stringable
     data = with pkgs.vimPlugins; [
@@ -201,6 +249,7 @@ inputs:
       vim-startuptime
       blink-cmp
       blink-compat
+      copilot-vim
       cmp-cmdline
       luasnip
       colorful-menu-nvim
