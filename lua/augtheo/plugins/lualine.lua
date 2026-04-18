@@ -25,7 +25,7 @@ return {
 		require("lualine").setup({
 			options = {
 				icons_enabled = false,
-				theme = nixInfo("onedark_dark", "settings", "colorscheme"),
+				theme = nixInfo("catppuccin", "settings", "colorscheme"),
 				component_separators = "",
 				section_separators = "",
 				disabled_filetypes = { "alpha" },

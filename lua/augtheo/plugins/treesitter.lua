@@ -119,4 +119,12 @@ return {
 			-- https://github.com/nvim-treesitter/nvim-treesitter-textobjects/tree/main
 		end,
 	},
+	{
+		"nvim-treesitter-context",
+		auto_enable = true,
+		lazy = false,
+		after = function(plugin)
+			require("treesitter-context").setup()
+		end,
+	},
 }

@@ -62,7 +62,7 @@ inputs:
   # To add a wrapped $out/bin/${config.binName}-neovide to the resulting neovim derivation
   # config.hosts.neovide.nvim-host.enable = true;
 
-  config.settings.colorscheme = "moonfly";
+  config.settings.colorscheme = "catppuccin";
 
   config.specs.colorscheme = {
     lazy = true;
@@ -271,6 +271,7 @@ inputs:
       nvim-lint
       conform-nvim
       nvim-treesitter-textobjects
+      nvim-treesitter-context
       # treesitter + grammars
       nvim-treesitter.withAllGrammars
       # This is for if you only want some of the grammars
