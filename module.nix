@@ -177,6 +177,16 @@ inputs:
     ];
   };
 
+  config.specs.protobuf = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+    ];
+    extraPackages = with pkgs; [
+      buf
+    ];
+  };
+
   config.specs.debug = {
     after = [ "general" ];
     lazy = true;

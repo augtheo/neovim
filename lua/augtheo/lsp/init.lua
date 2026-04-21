@@ -15,6 +15,7 @@ require("lze").load({
 	{ import = "augtheo.lsp.lang.go" },
 	{ import = "augtheo.lsp.lang.rust" },
 	{ import = "augtheo.lsp.lang.lua" },
+	{ import = "augtheo.lsp.lang.proto" },
 })
 
 require("augtheo.lsp.on_attach")
