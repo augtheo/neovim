@@ -45,6 +45,7 @@
             config.allowUnfreePredicate = pkg:
               builtins.elem (nixpkgs.lib.getName pkg) [
                 "copilot.vim"
+                "replace"
               ];
           };
         in
