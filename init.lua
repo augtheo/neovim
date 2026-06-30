@@ -111,6 +111,7 @@ nixInfo.lze.load({
 	{ import = "augtheo.plugins.markdown-preview" },
 	{ import = "augtheo.plugins.mini-files" },
 	{ import = "augtheo.plugins.mini-utils" },
+	{ import = "augtheo.plugins.ai" },
 	{ import = "augtheo.plugins.git" },
 	{ import = "augtheo.plugins.noice" },
 	{ import = "augtheo.plugins.snacks" },

@@ -13,6 +13,14 @@
     url = "github:BirdeeHub/lzextras";
     flake = false;
   };
+  inputs.plugins-claudecode-nvim = {
+    url = "github:coder/claudecode.nvim";
+    flake = false;
+  };
+  inputs.plugins-opencode-nvim = {
+    url = "github:nickjvandyke/opencode.nvim";
+    flake = false;
+  };
   outputs =
     { self
     , nixpkgs
@@ -44,7 +52,6 @@
             inherit system;
             config.allowUnfreePredicate = pkg:
               builtins.elem (nixpkgs.lib.getName pkg) [
-                "copilot.vim"
                 "replace"
               ];
           };
