@@ -26,3 +26,14 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 })
 
 vim.cmd([[autocmd User TelescopeFindPre hi! link NormalNC Normal]])
+
+-- [[ Pick up changes made outside nvim (e.g. lazygit in another tmux pane) ]]
+-- Requires `set -g focus-events on` in tmux.conf for FocusGained to fire on pane switch.
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+	callback = function()
+		if vim.bo.buftype == "" then
+			vim.cmd("checktime")
+		end
+	end,
+})

@@ -216,12 +216,13 @@ inputs:
     lazy = true;
     data = with pkgs.vimPlugins; [
       gitlinker-nvim
-      vim-fugitive
       diffview-nvim
       gitsigns-nvim
+      octo-nvim
     ];
     extraPackages = with pkgs; [
       lazygit
+      gh
     ];
   };
 
