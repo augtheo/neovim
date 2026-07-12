@@ -1,0 +1,24 @@
+repos:
+  - repo: local
+    hooks:
+      - id: stylua
+        name: stylua
+        description: Format Lua files with stylua
+        entry: stylua
+        language: system
+        types: [lua]
+      - id: selene
+        name: selene
+        description: Lint Lua files with selene
+        entry: selene --allow-warnings
+        language: system
+        types: [lua]
+        pass_filenames: false
+        args: [lua/, init.lua, after/]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: check-merge-conflict

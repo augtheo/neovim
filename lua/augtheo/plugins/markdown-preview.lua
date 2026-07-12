@@ -1,9 +1,9 @@
 return {
-    {
-        "render-markdown.nvim",
-        for_cat = "markdown",
-        ft = "markdown",
-    },
+	{
+		"render-markdown.nvim",
+		for_cat = "markdown",
+		ft = "markdown",
+	},
 	{
 		"markdown-preview.nvim",
 		-- NOTE: for_cat is a custom handler that just sets enabled value for us,

@@ -1,0 +1,18 @@
+[selene]
+base = "lua51"
+name = "vim"
+
+[vim]
+any = true
+
+[jit]
+any = true
+
+[nixCats]
+any = true
+
+[nixInfo]
+any = true
+
+[Snacks]
+any = true

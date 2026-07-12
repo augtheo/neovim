@@ -37,7 +37,13 @@ return {
 		-- auto_enable checks nixInfo.get_nix_plugin_path(value); the nix attribute is
 		-- catppuccin-nvim, not catppuccin, so we must pass the correct name here.
 		auto_enable = "catppuccin-nvim",
-		colorscheme = { "catppuccin", "catppuccin-latte", "catppuccin-frappe", "catppuccin-macchiato", "catppuccin-mocha" },
+		colorscheme = {
+			"catppuccin",
+			"catppuccin-latte",
+			"catppuccin-frappe",
+			"catppuccin-macchiato",
+			"catppuccin-mocha",
+		},
 		-- load is called (via ColorSchemePre) before colors/catppuccin.vim is sourced.
 		-- We cannot use packadd here because the nix package name differs from the spec
 		-- name — packadd("catppuccin") would be a no-op. Instead, resolve the real nix

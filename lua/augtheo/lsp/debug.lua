@@ -24,7 +24,6 @@ require("lze").load({
 			{ "<leader>b", desc = "Debug: Toggle Breakpoint" },
 			{ "<leader>B", desc = "Debug: Set Breakpoint" },
 			{ "<F7>", desc = "Debug: See last session result." },
-
 		},
 		load = function(name)
 			vim.cmd.packadd(name)
@@ -48,8 +47,8 @@ require("lze").load({
 			vim.keymap.set("n", "<leader>B", function()
 				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 			end, { desc = "Debug: Set Breakpoint" })
-            -- Add more keymaps
-            vim.keymap.set("n", "<leader>dr", dap.repl.open, { desc = "Debug: Open REPL" })
+			-- Add more keymaps
+			vim.keymap.set("n", "<leader>dr", dap.repl.open, { desc = "Debug: Open REPL" })
 
 			-- Toggle to see last session result
 			vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })

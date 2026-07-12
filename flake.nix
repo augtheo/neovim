@@ -86,5 +86,15 @@
       formatter = forAllSystems (system:
         nixpkgs.legacyPackages.${system}.nixpkgs-fmt
       );
+      devShells = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = [ pkgs.stylua pkgs.selene pkgs.pre-commit ];
+          };
+        }
+      );
     };
 }
