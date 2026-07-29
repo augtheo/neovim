@@ -1,0 +1,18 @@
+nixInfo.lze.load({
+	{ import = "augtheo.plugins.alpha" },
+	{ import = "augtheo.plugins.colorschemes" },
+	{ import = "augtheo.plugins.colorful-winsep" },
+	{ import = "augtheo.plugins.completion" },
+	{ import = "augtheo.plugins.lualine" },
+	{ import = "augtheo.plugins.markdown-preview" },
+	{ import = "augtheo.plugins.mini-files" },
+	{ import = "augtheo.plugins.mini-utils" },
+	{ import = "augtheo.plugins.ai" },
+	{ import = "augtheo.plugins.git" },
+	{ import = "augtheo.plugins.noice" },
+	{ import = "augtheo.plugins.snacks" },
+	{ import = "augtheo.plugins.telescope" },
+	{ import = "augtheo.plugins.treesitter" },
+	{ import = "augtheo.plugins.utils" },
+	{ import = "augtheo.plugins.which-key" },
+})
