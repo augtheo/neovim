@@ -177,6 +177,18 @@ inputs:
     ];
   };
 
+  config.specs.csharp = {
+    after = [ "general" ];
+    lazy = true;
+    data = with pkgs.vimPlugins; [
+    ];
+    extraPackages = with pkgs; [
+      roslyn-ls
+      csharpier
+      netcoredbg
+    ];
+  };
+
   config.specs.protobuf = {
     after = [ "general" ];
     lazy = true;

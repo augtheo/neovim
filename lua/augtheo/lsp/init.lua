@@ -13,6 +13,7 @@ require("lze").load({
 	{ import = "augtheo.lsp.lang.python" },
 	{ import = "augtheo.lsp.lang.nix" },
 	{ import = "augtheo.lsp.lang.go" },
+	{ import = "augtheo.lsp.lang.csharp" },
 	{ import = "augtheo.lsp.lang.rust" },
 	{ import = "augtheo.lsp.lang.lua" },
 	{ import = "augtheo.lsp.lang.proto" },
