@@ -1,6 +1,6 @@
 return {
 	{
-		"claudecode.nvim",
+		"claudecode-nvim",
 		for_cat = "ai",
 		cmd = {
 			"ClaudeCode",
@@ -43,7 +43,7 @@ return {
 		end,
 	},
 	{
-		"opencode.nvim",
+		"opencode-nvim",
 		for_cat = "ai",
 		keys = {
 			{ "<leader>oa", mode = { "n", "x" }, desc = "Ask OpenCode" },

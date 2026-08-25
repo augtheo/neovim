@@ -1,25 +1,16 @@
 require("lze").load({
 	{
 		"conform.nvim",
-		-- for_cat = 'format',
 		auto_enable = true,
-		-- cmd = { "" },
-		-- event = "",
-		-- ft = "",
 		keys = {
 			{ "<leader>FF", desc = "[F]ormat [F]ile" },
 		},
-		-- colorscheme = "",
-		after = function(plugin)
+		after = function(_)
 			local conform = require("conform")
+			local languages = require("augtheo.languages")
 
 			conform.setup({
-				formatters_by_ft = {
-					cs = nixInfo(nil, "settings", "cats", "csharp") and { "csharpier" } or nil,
-					lua = nixInfo(nil, "settings", "cats", "lua") and { "stylua" } or nil,
-					python = nixInfo(nil, "settings", "cats", "python") and { "ruff_format", "ruff_organize_imports" }
-						or nil,
-				},
+				formatters_by_ft = languages.get_formatters_by_ft(),
 			})
 
 			vim.keymap.set({ "n", "v" }, "<leader>FF", function()

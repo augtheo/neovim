@@ -14,18 +14,19 @@ require("lze").load({
 			vim.cmd.packadd(name)
 			vim.cmd.packadd("nvim-nio")
 			vim.cmd.packadd("FixCursorHold-nvim")
-			vim.cmd.packadd("neotest-python")
+			if nixInfo(false, "settings", "cats", "python") then
+				pcall(vim.cmd.packadd, "neotest-python")
+			end
+			if nixInfo(false, "settings", "cats", "go") then
+				pcall(vim.cmd.packadd, "neotest-go")
+			end
 		end,
 		after = function()
 			local neotest = require("neotest")
+			local languages = require("augtheo.languages")
 
 			neotest.setup({
-				adapters = {
-					require("neotest-python")({
-						dap = { justMyCode = false },
-					}),
-					require("rustaceanvim.neotest"),
-				},
+				adapters = languages.get_test_adapters(),
 				status = { virtual_text = true },
 				output = { open_on_run = true },
 			})

@@ -25,7 +25,7 @@ return {
 		require("lualine").setup({
 			options = {
 				icons_enabled = false,
-				theme = nixInfo("catppuccin", "settings", "colorscheme"),
+				theme = "catppuccin-nvim",
 				component_separators = "",
 				section_separators = "",
 				disabled_filetypes = { "alpha" },

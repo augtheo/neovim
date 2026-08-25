@@ -1,18 +1,3 @@
---- Resolve the python executable for debugpy.
---- Checks VIRTUAL_ENV, then .venv in cwd (uv/poetry), then falls back to python3.
-local function get_python_path()
-	local venv = os.getenv("VIRTUAL_ENV")
-	if venv then
-		return venv .. "/bin/python"
-	end
-	local cwd = vim.fn.getcwd()
-	local venv_python = cwd .. "/.venv/bin/python"
-	if vim.fn.executable(venv_python) == 1 then
-		return venv_python
-	end
-	return "python3"
-end
-
 require("lze").load({
 	{
 		"nvim-dap",
@@ -29,16 +14,18 @@ require("lze").load({
 			vim.cmd.packadd(name)
 			vim.cmd.packadd("nvim-dap-ui")
 			vim.cmd.packadd("nvim-dap-virtual-text")
-			vim.cmd.packadd("nvim-dap-python")
+			if nixInfo(false, "settings", "cats", "python") then
+				pcall(vim.cmd.packadd, "nvim-dap-python")
+			end
 		end,
 		after = function(_)
 			local dap = require("dap")
 			local dapui = require("dapui")
+			local languages = require("augtheo.languages")
 
-			-- Python debug adapter (requires debugpy in venv: `uv add --dev debugpy`)
-			require("dap-python").setup(get_python_path())
+			languages.setup_dap()
 
-			-- Basic debugging keymaps
+			-- Universal debugging keymaps
 			vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
 			vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
 			vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
@@ -47,22 +34,10 @@ require("lze").load({
 			vim.keymap.set("n", "<leader>B", function()
 				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 			end, { desc = "Debug: Set Breakpoint" })
-			-- Add more keymaps
 			vim.keymap.set("n", "<leader>dr", dap.repl.open, { desc = "Debug: Open REPL" })
 
 			-- Toggle to see last session result
 			vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })
-
-			-- Python-specific debug keymaps (from nvim-dap-python)
-			vim.keymap.set("n", "<leader>dm", function()
-				require("dap-python").test_method()
-			end, { desc = "Debug: Test [M]ethod" })
-			vim.keymap.set("n", "<leader>dc", function()
-				require("dap-python").test_class()
-			end, { desc = "Debug: Test [C]lass" })
-			vim.keymap.set("v", "<leader>ds", function()
-				require("dap-python").debug_selection()
-			end, { desc = "Debug: [S]election" })
 
 			dap.listeners.after.event_initialized["dapui_config"] = dapui.open
 			dap.listeners.before.event_terminated["dapui_config"] = dapui.close
